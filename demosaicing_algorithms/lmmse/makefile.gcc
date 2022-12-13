@@ -1,0 +1,99 @@
+# GCC makefile for dmzhangwu
+# Pascal Getreuer 
+# April 19, 2011
+
+## 
+# The following three statements determine the build configuration.
+# For handling different image formats, the program can be linked with
+# the libjpeg, libpng, and libtiff libraries.  For each library, set
+# the flags needed for linking.  To disable use of a library, comment
+# its statement.  You can disable all three (BMP is always supported).
+LDLIBJPEG=-ljpeg
+LDLIBPNG=-lpng
+LDLIBTIFF=-ltiff
+
+##
+# Standard make settings
+SHELL=/bin/sh
+CFLAGS=-O2 -ansi -pedantic -Wall -Wextra 
+LDFLAGS=-lm $(LDLIBJPEG) $(LDLIBPNG) $(LDLIBTIFF)
+DMZHANGWU_SOURCES=dmzhangwucli.c dmzhangwu.c dmbilinear.c imageio.c conv.c basic.c
+DMBILINEAR_SOURCES=dmbilinearcli.c dmbilinear.c imageio.c basic.c
+MOSAIC_SOURCES=mosaic.c imageio.c basic.c
+IMDIFF_SOURCES=imdiff.c conv.c imageio.c basic.c
+SOURCES=makefile.gcc makefile.vc readme.html bsd-license.txt \
+basic.c basic.h imageio.c imageio.h conv.c conv.h \
+dmzhangwucli.c dmzhangwu.c dmzhangwu.h \
+dmbilinearcli.c dmbilinear.c dmbilinear.h \
+mosaic.c imdiff.c demo demo.bat frog.bmp doxygen.conf
+
+## 
+# These statements add compiler flags to define LIBJPEG_SUPPORT, etc.,
+# depending on which libraries have been specified above.
+ifneq ($(LDLIBJPEG),)
+	CJPEG=-DLIBJPEG_SUPPORT
+endif
+ifneq ($(LDLIBPNG),)
+	CPNG=-DLIBPNG_SUPPORT
+endif
+ifneq ($(LDLIBTIFF),)
+	CTIFF=-DLIBTIFF_SUPPORT
+endif
+
+ALLCFLAGS=$(CFLAGS) $(CJPEG) $(CPNG) $(CTIFF)
+DMZHANGWU_OBJECTS=$(DMZHANGWU_SOURCES:.c=.o)
+DMBILINEAR_OBJECTS=$(DMBILINEAR_SOURCES:.c=.o)
+MOSAIC_OBJECTS=$(MOSAIC_SOURCES:.c=.o)
+IMDIFF_OBJECTS=$(IMDIFF_SOURCES:.c=.o)
+.SUFFIXES: .c .o
+
+.PHONY: all
+all: dmzhangwu dmbilinear mosaic imdiff
+
+dmzhangwu: $(DMZHANGWU_OBJECTS)
+	$(CC) $(DMZHANGWU_OBJECTS) $(LDFLAGS) -o $@
+
+dmbilinear: $(DMBILINEAR_OBJECTS)
+	$(CC) $(DMBILINEAR_OBJECTS) $(LDFLAGS) -o $@
+
+mosaic: $(MOSAIC_OBJECTS)
+	$(CC) $(MOSAIC_OBJECTS) $(LDFLAGS) -o $@
+
+imdiff: $(IMDIFF_OBJECTS)
+	$(CC) $(IMDIFF_OBJECTS) $(LDFLAGS) -o $@
+
+.c.o:
+	$(CC) -c $(ALLCFLAGS) $< -o $@
+
+.PHONY: clean
+clean:
+	$(RM) $(DMZHANGWU_OBJECTS) $(DMBILINEAR_OBJECTS) $(MOSAIC_OBJECTS) $(IMDIFF_OBJECTS) \
+	dmzhangwu dmbilinear mosaic imdiff
+
+.PHONY: rebuild
+rebuild: clean all
+
+# Source documentation with Doxygen
+.PHONY: srcdoc
+srcdoc: $(SOURCES)
+	doxygen doxygen.conf
+
+.PHONY: dist
+dist: $(SOURCES)
+	echo dmzhangwu-src > .fname
+	-rm -rf `cat .fname`
+	mkdir `cat .fname`
+	ln $(SOURCES) `cat .fname`
+	tar chzf `cat .fname`.tar.gz `cat .fname`
+	-rm -rf `cat .fname` .fname
+
+.PHONY: dist-zip
+dist-zip: $(SOURCES)
+	echo dmzhangwu-src > .fname
+	-rm -rf `cat .fname`
+	mkdir `cat .fname`
+	ln $(SOURCES) `cat .fname`
+	-rm `cat .fname`.zip
+	zip -9 `cat .fname`.zip `cat .fname`/*
+	-rm -rf `cat .fname` .fname
+
