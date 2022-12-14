@@ -1,0 +1,26 @@
+The files in the folder "demosaicing_algorithms" come from other sources and are licensed separately, as detailed below and in the respective folders. All the other files are copyright Quentin Bammey, and are distributed under the GPL 3.0 or later licence. The following applies for the files that are not in the demosaicing_algorithms folder.
+
+Copyright (C) 2022 Quentin Bammey
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+
+
+
+The files "demosaicing_algorithms/aicc/io_png.c" and "demosaicing_algorithms/aicc/io_png.h" are copyright Nicolas Limare. These files are distributed under the BSD licence conditions described in the corresponding headers files.
+All the other files in "demosaicing_algorithms/aicc/" are copyright Joan Duran and Antoni Buades, and are distributed under the terms of the LGPLv3 licence.
+The file "demosaicing_algorithms/aicc/demosaicking_ipol.cpp" was modified to expose the demosaicing pattern as argument.
+
+The files in "demosaicing_algorithms/cdm_cnn/" are copyright Thibaud Ehret and Gabriele Facciolo. These files are distributed under the terms of the GPL 3.0 or later licence.
+The file "demosaicing_algorithms/cdm_cnn/cdmcnn.py" was modified to return the output when calling the main function instead of saving it, to remove the comparison to the ground truth, and to expose the demosaicing pattern as parameter.
+
+The files in "demosaicing_algorithms/cs", "demosaicing_algorithms/gunturk" and "demosaicing_algorithms/lmmse"  are copyright Pascal Getreuer. These files are distributed under the Simplified BSD Licence.
+
+The files in "demosaicing_algorithms/residual_demosaicing" are copyright Qiyu Jin, Yu Guo, Gabriele Facciolo, all rights reserved.
+
+The files in "demosaicing_algorithms/ssdd" are copyright A. Buades with contributions from Nicolas Limare. In particular, the files "demosaicing_algorithms/ssdd/demosaickingIpol.cpp", "demosaicing_algorithms/ssddlibdemosaicking.cpp" and "demosaicing_algorithms/ssdd/libdemosaicking.h" may be linked to the US patent 5,629,734 by J. Hamilton Jr and J. Adams Jr, to the US patent 4,642,678 by  D. Cok and to the EP patent 1,749,278 by A. Buades, T. Coll and J.M. Morel. They are provided for scientific and education only.
+All the other files in "demosaicing_algorithms/ssdd" are distributed under the terms of the LGPLv3 licence.

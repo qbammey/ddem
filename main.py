@@ -16,11 +16,11 @@ if __name__ == "__main__":
             with open("demo_failure.txt", "w") as f:
                 f.write(message)
             self.exit(0, '%s: error: %s\n' % (self.prog, message))
-    parser = ArgumentParser()
-    parser.add_argument("input", type=str)
-    parser.add_argument("--window-size", "-W", type=int, default=32)
-    parser.add_argument("--logthreshold", "-t", type=float, default=3)
-    parser.add_argument("--algorithms", "-a", nargs='+', choices=ALGS, default=DEFAULT_ALGS)
+    parser = ArgumentParser(description="Detection of image forgeries by use of the double demosaicing method.")
+    parser.add_argument("input", type=str, help="path to the input image.")
+    parser.add_argument("--window-size", "-W", type=int, default=32, help="Size of the windows in which to perform detections. Larger windows will lead to more confident results but might cause smaller forgeries to be undetected. Increase the size if the method does not perform well locally, decrease it to find smaller forgeries if the method performs well locally at the selected size. Window size should be even.")
+    parser.add_argument("--logthreshold", "-t", type=float, default=3, help="negative base-10 logarithm of the tolerated number of false alarms (NFA). A value of k means that under the background hypothesis, one can statistically expect one false detection every 10^k images.")
+    parser.add_argument("--algorithms", "-a", nargs='+', choices=ALGS, default=DEFAULT_ALGS, help="Algorithms to use in the detection.")
     args = parser.parse_args()
     img_path = args.input
     W = args.window_size
