@@ -156,7 +156,6 @@ def demosaick(net, M):
     out[0, 1, 1::2, 1::2] = M[0, 1, 1::2, 1::2]
 
     tot_time_ref *= 1000
-    print("Time  {:.0f} ms".format(tot_time_ref))
 
     return out, tot_time_ref
 
@@ -165,7 +164,6 @@ def demosaick_load_model(network_path=None):
     if network_path:
         m = th.load(network_path, map_location={'cuda:0': 'cpu'})
     else:
-        print("Loading Matconvnet weights")
         m = cdmcnn.CDMCNN_pretrained()
     return m
 
@@ -183,7 +181,6 @@ def main(args):
 
     # Pad image to avoid border effects
     crop = 48
-    print("Crop", crop)
 
     δx = 1 - args.offset_x
     δy = args.offset_y
@@ -207,18 +204,15 @@ def main(args):
         Iref = _uint2float(Iref)
 
     if args.linear_input:
-        print("  - Input is linear, mapping to sRGB for processing")
         Iref = np.power(Iref, 1.0 / 2.2)
 
     if len(Iref.shape) == 2:
         # Offset the image to match to the mosaic pattern
         if δx > 0:
-            print('  - offset x')
             # Iref = Iref[:, 1:]
             Iref = np.pad(Iref, [(0, 0), (δx, 0)], 'symmetric')
 
         if δy > 0:
-            print('  - offset y')
             # Iref = Iref[1:, :]
             Iref = np.pad(Iref, [(δy, 0), (0, 0)], 'symmetric')
         has_groundtruth = False
@@ -227,12 +221,10 @@ def main(args):
         # No need for offsets if we have the ground-truth
         # DEBUG add offsets anyway
         if δx > 0:
-            print('  - offset x')
             # Iref = Iref[:, 1:]
             Iref = np.pad(Iref, [(0, 0), (δx, 0), (0, 0)], 'symmetric')
 
         if δy > 0:
-            print('  - offset y')
             # Iref = Iref[1:, :]
             Iref = np.pad(Iref, [(δy, 0), (0, 0), (0, 0)], 'symmetric')
 
@@ -244,12 +236,7 @@ def main(args):
         c = crop + (crop % 2)  # Make sure we don't change the pattern's period
         I = np.pad(I, [(c, c), (c, c), (0, 0)], 'symmetric')
 
-    if has_groundtruth:
-        print('  - making mosaick')
-    else:
-        print('  - formatting mosaick')
 
-    print(Iref.shape, I.shape)
     I = np.array(I).transpose(2, 0, 1).astype(np.float32)
 
     M = bayer_mosaic(I)
@@ -275,13 +262,11 @@ def main(args):
     δy = args.offset_y
     if True or not has_groundtruth:
         if δx > 0:
-            print('  - remove offset x')
             R = R[:, δx:]
             I = I[:, δx:]
             M = M[:, δx:]
 
         if δy > 0:
-            print('  - remove offset y')
             R = R[δy:, :]
             I = I[δy:, :]
             M = M[δy:, :]
@@ -289,16 +274,13 @@ def main(args):
     if True or len(Iref.shape) == 2:
         # Offset the image to match the our mosaic pattern
         if δx == 1:
-            print('  - offset x')
             Iref = Iref[:, 1:]
 
         if δy == 1:
-            print('  - offset y')
             Iref = Iref[1:, :]
         # has_groundtruth = False
 
     if args.linear_input:
-        print("  - Input is linear, mapping output back from sRGB")
         R = np.power(R, 2.2)
     """
     if has_groundtruth:

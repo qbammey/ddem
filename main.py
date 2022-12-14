@@ -15,11 +15,24 @@ if __name__ == "__main__":
     parser.add_argument("--window-size", "-W", type=int, default=32)
     parser.add_argument("--logthreshold", "-t", type=float, default=3)
     parser.add_argument("--algorithms", "-a", nargs='+', choices=ALGS, default=DEFAULT_ALGS)
-    args = parser.parse_args()
-
+    try:
+        args = parser.parse_args()
+    except AssertionError:
+        with open("demo_failure.txt") as f:
+            f.write("Could not parse parameters.")
+            print("Could not parse parameters.")
+            exit()
     img_path = args.input
     W = args.window_size
+    Wn = W - W%2
+    if W != Wn:
+        print(f"Window size must be even. Modifying it from {W} to {Wn}.")
+        Wn = W
     algs = args.algorithms
+    if len(algs) == 0:
+        print("An empty algorithms list was provided. Using the default selection instead.")
+        algs = DEFAULT_ALGS
+
     threshold = 10 ** (-args.logthreshold)
     detected_inconsistencies_diag, detected_inconsistencies_grid, detected_inconsistencies_pattern, detected_inconsistencies_alg, detected_inconsistencies_merged, detected_is_consistent_diag, detected_is_consistent_grid, detected_is_consistent_alg = detect_forgeries(
         img_path, algs, W, threshold)
