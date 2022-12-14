@@ -19,7 +19,7 @@ if __name__ == "__main__":
     try:
         args = parser.parse_args()
     except:
-        with open("demo_failure.txt") as f:
+        with open("demo_failure.txt", "w") as f:
             f.write("Could not parse parameters.")
             print("Could not parse parameters.")
             exit()
