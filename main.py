@@ -43,6 +43,8 @@ if __name__ == "__main__":
     consistency_map_alg = detected_is_consistent_alg[:, :, None] * [0, 255, 0] + detected_inconsistencies_alg[:, :,
                                                                                  None] * [255, 0, 0]
     imageio.imsave("output.png", detected_inconsistencies_merged.astype(np.uint8) * 255)
+    imageio.imsave("output_pattern.png", detected_inconsistencies_pattern.astype(np.uint8) * 255)
+    imageio.imsave("output_alg.png", detected_inconsistencies_alg.astype(np.uint8) * 255)
     imageio.imsave("consistency_map_diag.png", consistency_map_diag.astype(np.uint8))
     imageio.imsave("consistency_map_grid.png", consistency_map_grid.astype(np.uint8))
     imageio.imsave("consistency_map_alg.png", consistency_map_alg.astype(np.uint8))
