@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import argparse
+import sys
 import imageio
 import numpy as np
 
@@ -11,18 +11,17 @@ DEFAULT_ALGS = ['bilinear', 'cs', 'ha', 'gunturk', 'lmmse', 'gbtf']
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser()
+    class ArgumentParser(argparse.ArgumentParser):
+        def error(self, message):
+            with open("demo_failure.txt", "w") as f:
+                f.write(message)
+            self.exit(0, '%s: error: %s\n' % (self.prog, message))
+    parser = ArgumentParser()
     parser.add_argument("input", type=str)
     parser.add_argument("--window-size", "-W", type=int, default=32)
     parser.add_argument("--logthreshold", "-t", type=float, default=3)
     parser.add_argument("--algorithms", "-a", nargs='+', choices=ALGS, default=DEFAULT_ALGS)
-    try:
-        args = parser.parse_args()
-    except:
-        with open("demo_failure.txt", "w") as f:
-            f.write("Could not parse parameters.")
-            print("Could not parse parameters.")
-            exit()
+    args = parser.parse_args()
     img_path = args.input
     W = args.window_size
     Wn = W - W % 2
